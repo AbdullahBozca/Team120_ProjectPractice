@@ -20,7 +20,7 @@ public class Registration {
     static ArrayList<User> register() {
         System.out.print("İsminizi giriniz: ");
         String name = scan.nextLine();
-        LocalDateTime time = LocalDateTime.now();
+        LocalDateTime time = LocalDateTime.now();// o andaki sistem tarihini atar
         User kullanici = new User(name, time);// p'li cons. kullanarak user class ından obje oluşturduk
         kullanicilar.add(kullanici);
         return kullanicilar;
