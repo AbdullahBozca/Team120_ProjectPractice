@@ -14,10 +14,9 @@ public class Menu {
                 "SEÇİMİNİZ: ");
         int secim = scan.nextInt();
         switch (secim) {
-            case 1: {
+            case 1:
                 cemberOlustur();
 
-            }
             case 2:
                 dikdortgenOlustur();
             case 3:
@@ -32,9 +31,9 @@ public class Menu {
     }
 
     private static void kareOlustur() {
-        System.out.println("KARENİN KENAR UZUNLUĞUNU GİRİNİZ: ");
-        double kenarUzunlugu=scan.nextDouble();
-        Kare kare=new Kare(kenarUzunlugu,kenarUzunlugu);
+        System.out.print("KARENİN KENAR UZUNLUĞUNU GİRİNİZ: ");
+        double kenarUzunlugu = scan.nextDouble();
+        Kare kare = new Kare(kenarUzunlugu, kenarUzunlugu);
         System.out.println(kare);
         menu();
     }
