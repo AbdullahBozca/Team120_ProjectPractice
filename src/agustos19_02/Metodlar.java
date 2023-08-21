@@ -20,64 +20,124 @@ Para gönderme işleminde istenen iban TR ile baslamali ve toplam 26 karakterli 
 
 Sifre değiştirme işleminde mevcut şifreyi teyit ettikten sonra, sifre değişiklik işlemini yapmali,
      */
-    ArrayList<Kullanici> kullaniciList = new ArrayList<>();
+    static ArrayList<Kullanici> kullaniciList = new ArrayList<>();
     Scanner scan = new Scanner(System.in);
+    String kartNo;
+    int sayac = 0;
+
+    boolean kullaniciGirisi() {
+        /*
+        Kullanicidan giriş için kart numarasi ve şifresini isteyin, eger herhangi birini yanlis girerse tekrar isteyin.
+Kart numarasi aralarda boşluk ile girerse de eger doğruysa kabul edin.
+Kart numarasi ve sifre dogrulanirsa kullanicinin yapabileceği işlemleri ekrana yazdirin,
+         */
+
+        boolean giris = false;
+        System.out.print("KART NO GİRİNİZ: ");
+        kartNo = scan.nextLine();
+        System.out.print("ŞİFRE GİRİNİZ: ");
+        int sifre = scan.nextInt();
+        for (Kullanici each : kullaniciList) {
+            if (each.getKartNo().equals(kartNo) && each.getSifre() == sifre) {
+                giris = true;
+            }
+        }
+        return giris;
+    }
+
+    void kullaniciOlustur() {
+        System.out.print("KART NO GİRİNİZ:  ");
+        String kartNo = scan.nextLine().replace(" ", "");
+        System.out.print("ŞİFRE GİRİNİZ: ");
+        int sifre = scan.nextInt();
+        System.out.print("BAKİYE GİRİNİZ: ");
+        double bakiye = scan.nextDouble();
+        scan.nextLine();
+        Kullanici kullanici = new Kullanici(kartNo, sifre, bakiye);
+        kullaniciList.add(kullanici);
+    }
 
     void bakiyeSorgula() {
-        String kartNo = scan.nextLine();
-        boolean flag = true;
         for (Kullanici each : kullaniciList) {
             if (each.getKartNo().equals(kartNo)) {
                 System.out.println(kartNo + " ait bakiye= " + each.getBakiye());
-                flag=false;
             }
-        }
-        if (flag){
-            System.out.println("hatalı giriş yaptınız...");
-            bakiyeSorgula();
         }
     }
 
     void paraYatirma() {
-        String kartNo = scan.nextLine();
-        boolean flag = true;
         for (Kullanici each : kullaniciList) {
             if (each.getKartNo().equals(kartNo)) {
                 System.out.print("YATIRMAK İSTEDİĞİNİZ MİKTARI GİRİNİZ: ");
                 double miktar = scan.nextDouble();
                 each.setBakiye(miktar + each.getBakiye());//sıradaki kullanıcının bakiyesine miktarı o andaki bakiye ile toplayarak update ettik
-                System.out.println("Bakiyeniz=" + each.getBakiye());
-                flag = false;
+                bakiyeSorgula();
             }
         }
-        if (flag) {
-            System.out.println("hatali giriş yaptınız.....");
-            paraYatirma();
-        }
+
     }
 
     void paraCekme() {
-        String kartNo = scan.nextLine();
-        boolean flag=true;
-        for (Kullanici each: kullaniciList) {
-            if (each.getKartNo().equals(kartNo)){
+        for (Kullanici each : kullaniciList) {
+            if (each.getKartNo().equals(kartNo)) {
                 //Para çekme ve para gonderme işleminde mevcut bakiyeden buyuk para çekilemez,
                 System.out.print("Çekmek istediğiniz miktarı giriniz: ");
-                double miktar= scan.nextDouble();
-                if (miktar<=each.getBakiye()){
-                    each.setBakiye(each.getBakiye()-miktar);
-                    System.out.println("Bakiyeniz: "+ each.getBakiye());
-                }else {
+                double miktar = scan.nextDouble();
+                if (miktar <= each.getBakiye()) {
+                    each.setBakiye(each.getBakiye() - miktar);
+                    bakiyeSorgula();
+                } else {
                     System.out.println("Yetersiz bakiye....");
                     paraCekme();
                 }
-                flag=false;
+
             }
         }
-        if (flag){
-            System.out.println("Hatalı giriş yaptınız....");
-            paraCekme();
+    }
+
+    void paraGonderme() {
+        //Para çekme ve para gonderme işleminde mevcut bakiyeden buyuk para çekilemez,
+        //Para gönderme işleminde istenen iban TR ile baslamali ve toplam 26 karakterli olmali, eger değilse menü ekranina geri donsun.
+
+        for (Kullanici each : kullaniciList) {
+            if (each.getKartNo().equals(kartNo)) {
+                scan.nextLine();
+                System.out.print("PARA GÖNDERİLECEK İBANI GİRİNİZ: ");
+                String iban = scan.nextLine().replace(" ", "").toUpperCase();
+                if (iban.startsWith("TR") && iban.length() == 26) {
+                    System.out.print("GÖNDERMEK İSTEDİĞİNİZ MİKTARI GİRİNİZ: ");
+                    double miktar = scan.nextDouble();
+                    if (miktar <= each.getBakiye()) {
+                        each.setBakiye(each.getBakiye() - miktar);
+                        bakiyeSorgula();
+                    }
+                } else {
+                    System.out.println("HATALI İBAN GİRDİNİZ....");
+                    paraGonderme();
+                }
+            }
         }
+    }
+
+    void sifreDegistir() {
+        //Sifre değiştirme işleminde mevcut şifreyi teyit ettikten sonra, sifre değişiklik işlemini yapmali,
+        do {
+            sayac++;
+            System.out.print("MEVCUT ŞİFRENİZİ GİRİNİZ: ");
+            int sifre = scan.nextInt();
+            for (Kullanici each : kullaniciList) {
+                if (each.getKartNo().equals(kartNo)) {
+                    if (each.getSifre() == sifre) {
+                        System.out.println("YENİ ŞİFRENİZİ GİRİNİZ: ");
+                        each.setSifre(sifre);
+                    } else {
+                        System.out.println("HATALI GİRİŞ YAPTINIZ...");
+                        sifreDegistir();
+                    }
+                }
+            }
+
+        } while (sayac!=3);
 
     }
 }
