@@ -42,6 +42,8 @@ Kart numarasi ve sifre dogrulanirsa kullanicinin yapabileceği işlemleri ekrana
                 giris = true;
             }
         }
+
+        scan.nextLine();
         return giris;
     }
 
@@ -122,22 +124,30 @@ Kart numarasi ve sifre dogrulanirsa kullanicinin yapabileceği işlemleri ekrana
     void sifreDegistir() {
         //Sifre değiştirme işleminde mevcut şifreyi teyit ettikten sonra, sifre değişiklik işlemini yapmali,
         do {
-            sayac++;
+            sayac++;//1-2-3
             System.out.print("MEVCUT ŞİFRENİZİ GİRİNİZ: ");
             int sifre = scan.nextInt();
+            boolean flag = true;
             for (Kullanici each : kullaniciList) {
                 if (each.getKartNo().equals(kartNo)) {
                     if (each.getSifre() == sifre) {
-                        System.out.println("YENİ ŞİFRENİZİ GİRİNİZ: ");
+                        System.out.print("YENİ ŞİFRENİZİ GİRİNİZ: ");
+                        sifre = scan.nextInt();
                         each.setSifre(sifre);
-                    } else {
-                        System.out.println("HATALI GİRİŞ YAPTINIZ...");
-                        sifreDegistir();
+                        flag = false;
                     }
                 }
             }
+            if (flag) {
+                System.out.println("HATALI GİRİŞ YAPTINIZ....");
+            } else {
+                Menu menu = new Menu();
+                menu.giris();
+            }
 
-        } while (sayac!=3);
+        } while (sayac != 3);
+        System.out.println("SİSTEMDEN ÇIKILIYOR");
+        System.exit(0);
 
     }
 }

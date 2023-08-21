@@ -52,7 +52,10 @@ public class Menu extends Metodlar{
                 paraGonderme();
                 menu();
             case 5:
+                sifreDegistir();
             case 6:
+                System.out.println("SİSTEMDEN ÇIKILIYOR....");
+                System.exit(0);
             default:{
                 System.out.println("HATALI GİRİŞ YAPTINIZ...");
                 menu();
